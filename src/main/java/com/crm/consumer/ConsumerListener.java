@@ -5,6 +5,7 @@ import com.crm.dto.kafka.DeliveryReceiptDto;
 import com.crm.dto.kafka.LoginActivityDto;
 import com.crm.dto.kafka.MessageDto;
 import com.crm.dto.kafka.OrderDeliveryDto;
+import com.crm.entity.CommunicationLog;
 import com.crm.repository.CommunicationLogRepository;
 import com.crm.service.impl.CommunicationService;
 import com.crm.service.impl.LoginActivityServiceImpl;
@@ -36,12 +37,14 @@ public class ConsumerListener {
     }
     @KafkaListener(topics = "send-message", groupId = "message-group",containerFactory = "bulkMessageSendEventKafkaListenerContainerFactory")
     public void listenSendMessageEvent(MessageDto messageDto) {
+        System.out.println("Received send message event: " + messageDto);
         String status = messageService.sendMessage(messageDto);
+        CommunicationLog communicationLog=new CommunicationLog();
+        communicationLog.setStatus(status);
         communicationService.handleDeliveryReceipt(DeliveryReceiptDto.builder()
-                        .campaign(messageDto.getCampaign())
-                        .customer(messageDto.getCustomer())
-                .communicationLog(messageDto.getCommunicationLog())
-                .status(status)
+                        .campaign(messageDto.getCampaignRuleId())
+                        .customer(messageDto.getCustomerId())
+                .communicationLog(communicationLog)
                 .build());
     }
 }

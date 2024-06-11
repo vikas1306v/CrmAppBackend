@@ -17,8 +17,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeliveryReceiptDto {
-    Customer customer;
-    CampaignRule campaign;
-    private String status;
-    CommunicationLog communicationLog;
+    private Long customer;
+    private Long campaign;
+    private CommunicationLog communicationLog;
 }

@@ -1,18 +1,18 @@
 package com.crm.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Data
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CampaignRule {
@@ -22,8 +22,12 @@ public class CampaignRule {
     private String rule;
     private boolean campaignOver;
     private LocalDateTime startDate;
-    @OneToMany(mappedBy = "campaignRule", fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "customer_campaign",
+            joinColumns = @JoinColumn(name = "campaign_rule_id"),
+            inverseJoinColumns = @JoinColumn(name = "customer_id")
+    )@JsonIgnore
     private List<Customer> customers;
     @OneToMany(mappedBy = "campaignRule", fetch = FetchType.LAZY)
     @JsonManagedReference

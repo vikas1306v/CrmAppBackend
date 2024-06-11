@@ -15,6 +15,7 @@ import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @EnableKafka
@@ -26,7 +27,7 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         config.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class.getName());
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
-        config.put(JsonDeserializer.TRUSTED_PACKAGES, "com.crm.dto.kafka");
+        config.put(JsonDeserializer.TRUSTED_PACKAGES, List.of("com.crm.dto.kafka","com.crm.entity"));
         return config;
     }
     @Bean
@@ -47,7 +48,7 @@ public class KafkaConsumerConfig {
     public ConsumerFactory<String, MessageDto> bulkMessageSendEventConsumerFactory() {
         Map<String, Object> config = commonConsumerConfigs();
         config.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
-        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.crm.dto.kafka.MessageDto");
+        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE,"com.crm.dto.kafka.MessageDto");
         return new DefaultKafkaConsumerFactory<>(config);
     }
 

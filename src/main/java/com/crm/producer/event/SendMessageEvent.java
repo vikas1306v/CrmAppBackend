@@ -16,10 +16,6 @@ public class SendMessageEvent {
     @Qualifier("bulkMessageKafkaTemplate")
     private KafkaTemplate<String, MessageDto> bulkMessageKafkaTemplate;
     public void sendBulkMessageEvent(MessageDto messageDto) {
-        CommunicationLog communicationLog = new CommunicationLog();
-        communicationLog.setCampaignRule(messageDto.getCampaign());
-        communicationLog.setCustomerId(messageDto.getCustomer().getId());
-        messageDto.setCommunicationLog(communicationLog);
         bulkMessageKafkaTemplate.send("send-message", messageDto);
     }
 }

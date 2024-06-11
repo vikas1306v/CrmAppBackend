@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,6 +29,10 @@ public class CampaignRuleService {
     private static String getStringOfCampaignRule(RuleRequestDto ruleRequestDto) {
         StringBuilder rule= new StringBuilder();
         for(ConditionRequestDto conditionRequestDto: ruleRequestDto.getRules()){
+            if(conditionRequestDto.getConnector()==null){
+                rule.append(conditionRequestDto.getField()).append(" ").append(conditionRequestDto.getCondition()).append(" ").append(conditionRequestDto.getValue()).append(" ");
+                continue;
+            }
             rule.append(conditionRequestDto.getField()).append(" ").append(conditionRequestDto.getCondition()).append(" ").append(conditionRequestDto.getValue()).append(" ").append(conditionRequestDto.getConnector().toLowerCase()).append(" ");
         }
         String ruleString = rule.toString();
@@ -44,7 +49,12 @@ public class CampaignRuleService {
     @Transactional
     public ResponseEntity<GenericResponseBean<CampaignRule>> saveAudience(RuleRequestDto ruleRequestDto) {
         List<Customer> audienceFromCampaignRule = campaignRuleRepository.findAudienceFromCampaignRule(ruleRequestDto);
+        if(audienceFromCampaignRule.isEmpty()){
+            return ResponseEntity.status(200).body(GenericResponseBean.<CampaignRule>builder().
+                    message("AudienceSize isZero No Need To create this campaign ").status(false).data(null).build());
+        }
         CampaignRule campaignRule = createCampaignRule(ruleRequestDto);
+        campaignRule.setStartDate(LocalDateTime.now());
         campaignRule.setCustomers(audienceFromCampaignRule);
         campaignRule.setCampaignOver(false);
         campaignRule=campaignRuleRepository.save(campaignRule);
@@ -54,7 +64,7 @@ public class CampaignRuleService {
 
     public  ResponseEntity<GenericResponseBean<List<CampaignRule>>> getAllCampaign() {
         return ResponseEntity.status(200).body(GenericResponseBean.<List<CampaignRule>>builder().
-                message("AllCampaignRule ").status(true).data(campaignRuleRepository.findAll()).build());
+                message("AllCampaignRule ").status(true).data(campaignRuleRepository.findAllOrderByStartDateDesc()).build());
 
     }
 }

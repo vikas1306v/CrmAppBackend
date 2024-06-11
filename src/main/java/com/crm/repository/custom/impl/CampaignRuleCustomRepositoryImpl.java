@@ -20,6 +20,7 @@ public class CampaignRuleCustomRepositoryImpl implements CampaignRuleCustomRepos
 
     @Transactional
     public List<Customer> findAudienceFromCampaignRule(RuleRequestDto ruleRequestDto) {
+        System.out.println(ruleRequestDto.getRules().get(0).getConnector());
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Customer> cq = cb.createQuery(Customer.class);
         Root<CustomerLoginActivity> loginActivity = cq.from(CustomerLoginActivity.class);

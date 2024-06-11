@@ -1,10 +1,11 @@
-package com.crm.dto.kafka;
+package com.crm.dto.request;
 
-import com.crm.entity.CampaignRule;
-import com.crm.entity.CommunicationLog;
-import com.crm.entity.Customer;
+import com.crm.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,8 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MessageDto {
-   private  Long customerId;
-   private String message;
-   private Long campaignRuleId;
+public class GoogleAuthRequestDto {
+        private String name;
+        private String email;
 }

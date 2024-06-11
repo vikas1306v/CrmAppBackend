@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/campaign")
+@CrossOrigin("*")
 public class CampaignRuleController {
     private final CampaignRuleService campaignRuleService;
 
