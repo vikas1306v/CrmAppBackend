@@ -34,7 +34,8 @@ public class CommunicationService {
             return ResponseEntity.status(400).body(GenericResponseBean.builder()
                     .status(false).message("Campaign is Over").build());
         }
-//        List<Customer> customers = customerRepository.findByCampaignRules_Id(campaignId);
+        campaign.setCampaignOver(true);
+        campaignRuleRepository.save(campaign);
         campaign.getCustomers().forEach((customer)->{
             System.out.println("Sending message to "+customer.getName());
             sendMessages(customer,campaign);
